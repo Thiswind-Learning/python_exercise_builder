@@ -42,4 +42,9 @@ app.*.map.json
 
 # Exceptions to above rules.
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
-macos/Flutter/GeneratedPluginRegistrant.swift
+
+# Ignore generated files
+macos/Flutter/Generated*
+linux/flutter/generated*
+windows/flutter/generated*
+windows/flutter/GeneratedPlugins.props
