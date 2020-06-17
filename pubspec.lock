@@ -210,12 +210,12 @@ packages:
     source: sdk
     version: "0.0.0"
   flutter_chips_input:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: flutter_chips_input
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.8.3"
+    version: "1.9.0-dev.3"
   flutter_colorpicker:
     dependency: transitive
     description:
@@ -251,6 +251,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.8"
+  flutter_slidable:
+    dependency: "direct main"
+    description:
+      name: flutter_slidable
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.5.4"
   flutter_test:
     dependency: "direct dev"
     description: flutter
