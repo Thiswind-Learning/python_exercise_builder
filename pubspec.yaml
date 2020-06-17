@@ -40,6 +40,10 @@ dev_dependencies:
   # flutter pub run build_runner build
   json_serializable: ^3.3.0
 
+dependency_overrides:
+  # https://github.com/danvick/flutter_chips_input/issues/37
+  flutter_chips_input: ^1.9.0-dev.1
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
