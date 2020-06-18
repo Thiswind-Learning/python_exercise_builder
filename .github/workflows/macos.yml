@@ -48,10 +48,11 @@ jobs:
           cp -r build/macos/Build/Products/Release/python_exercise_builder.app python_exercise_builder-macos-${{ steps.branch_name.outputs.SOURCE_NAME }}.app
           zip python_exercise_builder-macos-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip -r python_exercise_builder-macos-${{ steps.branch_name.outputs.SOURCE_NAME }}.app
 
-      - uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
         with:
-          file: python_exercise_builder-macos-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip
-          tags: true
-          draft: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: python_exercise_builder-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true

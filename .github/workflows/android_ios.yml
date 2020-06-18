@@ -48,11 +48,12 @@ jobs:
           cp -r build/ios/Debug-iphonesimulator/Runner.app python_exercise_builder-ios-${{ steps.branch_name.outputs.SOURCE_NAME }}.app
           zip python_exercise_builder-ios-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip -r python_exercise_builder-ios-${{ steps.branch_name.outputs.SOURCE_NAME }}.app
           cp build/app/outputs/apk/release/app-release.apk python_exercise_builder-android-${{ steps.branch_name.outputs.SOURCE_NAME }}.apk
-
-      - uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
         with:
-          file: python_exercise_builder-ios-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip;python_exercise_builder-android-${{ steps.branch_name.outputs.SOURCE_NAME }}.apk
-          tags: true
-          draft: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: python_exercise_builder-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true

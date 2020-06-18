@@ -43,10 +43,11 @@ jobs:
         run: |
           7z a -tzip python_exercise_builder-windows-x64-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip -r .\build\windows\x64\Release\Runner\*
 
-      - uses: xresloader/upload-to-github-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v1-release
         with:
-          file: python_exercise_builder-windows-x64-${{ steps.branch_name.outputs.SOURCE_NAME }}.zip
-          tags: true
-          draft: false
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: python_exercise_builder-*
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
