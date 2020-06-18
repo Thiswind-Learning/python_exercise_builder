@@ -1,0 +1,31 @@
+# https://yaml-multiline.info/
+
+defaultRawTemplate: |-
+  Level {{ level }}
+
+  Question:
+  {{ question }}
+
+  Hints:
+  {{ hints }}
+
+  Test:
+  {{ test }}
+
+  Solution:
+  {{ solution }}
+
+defaultProgramTemplate: |-
+  # Level {{ level }}
+  # 
+  # Question:
+  # {{ question }}
+  # 
+  # Hints:
+  # {{ hints }}
+  # 
+  # Test:
+  # {{ test }}
+  # 
+  # Solution:
+  # {{ solution }}

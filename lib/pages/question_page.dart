@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:animated_floatactionbuttons/animated_floatactionbuttons.dart';
+import 'package:cross_local_storage/cross_local_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:python_exercise_builder/config.dart';
 import 'package:python_exercise_builder/models/question.dart';
+import 'package:python_exercise_builder/pages/import_export_page.dart';
 import 'package:python_exercise_builder/pages/question_form_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage({Key key}) : super(key: key);
@@ -17,6 +20,7 @@ class QuestionPage extends StatefulWidget {
 class _QuestionPageState extends State<QuestionPage> {
   List<Question> _list = [];
   bool _loading = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -24,9 +28,9 @@ class _QuestionPageState extends State<QuestionPage> {
     loadData();
   }
 
-  void loadData() async {
+  loadData() async {
     _loading = true;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var prefs = await LocalStorage.getInstance();
     var questions = prefs.getStringList('questions');
     print('loadData questions: $questions');
     if (questions != null) {
@@ -37,8 +41,8 @@ class _QuestionPageState extends State<QuestionPage> {
     });
   }
 
-  Future<void> saveData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  saveData() async {
+    var prefs = await LocalStorage.getInstance();
     var questions = _list.map((item) => json.encode(item.toJson())).toList();
     print('saveData questions: $questions');
     prefs.setStringList('questions', questions);
@@ -47,6 +51,7 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
         actions: [
           IconButton(
@@ -70,6 +75,7 @@ class _QuestionPageState extends State<QuestionPage> {
                           actionPane: SlidableDrawerActionPane(),
                           actionExtentRatio: 0.25,
                           child: ListTile(
+                            leading: CircleAvatar(child: Text(NumberFormat("000").format(entry.key + 1))),
                             title: Text(
                               entry.value.question,
                               maxLines: 1,
@@ -111,21 +117,43 @@ class _QuestionPageState extends State<QuestionPage> {
                 },
               ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () async => _handleAdd(),
+      floatingActionButton: AnimatedFloatingActionButton(
+        fabButtons: <Widget>[
+          FloatingActionButton(
+            heroTag: 'add',
+            child: Icon(Icons.add),
+            onPressed: () async => _handleAdd(),
+          ),
+          FloatingActionButton(
+            heroTag: 'import_export',
+            child: Icon(Icons.import_export),
+            onPressed: () async => _handleImportExport(),
+          ),
+        ],
+        colorStartAnimation: Colors.blue,
+        colorEndAnimation: Colors.red,
+        animatedIconData: AnimatedIcons.menu_close,
       ),
     );
   }
 
   void _updateItems(int oldIndex, int newIndex) {
-    if (oldIndex != newIndex) {
+    if (oldIndex != newIndex && newIndex > -1 && newIndex < _list.length) {
       setState(() {
         var tmp = _list[oldIndex];
         _list[oldIndex] = _list[newIndex];
         _list[newIndex] = tmp;
       });
     }
+  }
+
+  _handleImportExport() async {
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ImportExportPage(questions: _list),
+      ),
+    );
+    loadData();
   }
 
   _handleAdd() async {
@@ -138,6 +166,11 @@ class _QuestionPageState extends State<QuestionPage> {
       setState(() {
         _list.add(question);
       });
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('add successfully!'),
+        ),
+      );
     }
   }
 
@@ -151,6 +184,11 @@ class _QuestionPageState extends State<QuestionPage> {
       setState(() {
         _list[key] = question;
       });
+      _scaffoldKey.currentState.showSnackBar(
+        SnackBar(
+          content: Text('edit successfully!'),
+        ),
+      );
     }
   }
 
@@ -158,6 +196,11 @@ class _QuestionPageState extends State<QuestionPage> {
     setState(() {
       _list.removeAt(key);
     });
+    _scaffoldKey.currentState.showSnackBar(
+      SnackBar(
+        content: Text('delete successfully!'),
+      ),
+    );
   }
 
   _handleStar(int key, Question value) async {}

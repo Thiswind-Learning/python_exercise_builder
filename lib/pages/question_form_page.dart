@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:python_exercise_builder/config.dart';
 import 'package:python_exercise_builder/models/question.dart';
+import 'package:intl/intl.dart';
 
 class QuestionFormPage extends StatefulWidget {
   QuestionFormPage({Key key, this.question}) : super(key: key);
@@ -16,6 +17,7 @@ class _QuestionFormPageState extends State<QuestionFormPage> {
   @override
   Widget build(BuildContext context) {
     var question = widget.question;
+    var spacer = SizedBox(height: defaultMargin);
     return Scaffold(
       appBar: AppBar(),
       body: Padding(
@@ -35,45 +37,69 @@ class _QuestionFormPageState extends State<QuestionFormPage> {
                 autovalidate: true,
                 child: Column(
                   children: <Widget>[
-                    FormBuilderChoiceChip(
+                    FormBuilderSlider(
                       attribute: 'level',
+                      min: 0,
+                      max: 5,
+                      initialValue: question?.level?.toDouble() ?? 0,
+                      divisions: 5,
                       decoration: InputDecoration(
                         labelText: 'Select an level',
                       ),
-                      options: [
-                        FormBuilderFieldOption(value: null, child: Text('Level -')),
-                        FormBuilderFieldOption(value: 1, child: Text('Level 1')),
-                        FormBuilderFieldOption(value: 2, child: Text('Level 2')),
-                        FormBuilderFieldOption(value: 3, child: Text('Level 3')),
-                        FormBuilderFieldOption(value: 4, child: Text('Level 4')),
-                      ],
+                      numberFormat: NumberFormat("#"),
+                      valueTransformer: (value) {
+                        print('valueTransformer');
+                        return (value as double).floor();
+                      },
                     ),
+                    // FormBuilderChoiceChip(
+                    //   attribute: 'level',
+                    //   decoration: InputDecoration(
+                    //     labelText: 'Select an level',
+                    //   ),
+                    //   options: [
+                    //     FormBuilderFieldOption(value: null, child: Text('Level -')),
+                    //     FormBuilderFieldOption(value: 1, child: Text('Level 1')),
+                    //     FormBuilderFieldOption(value: 2, child: Text('Level 2')),
+                    //     FormBuilderFieldOption(value: 3, child: Text('Level 3')),
+                    //     FormBuilderFieldOption(value: 4, child: Text('Level 4')),
+                    //     FormBuilderFieldOption(value: 5, child: Text('Level 5')),
+                    //   ],
+                    // ),
+                    spacer,
                     FormBuilderTextField(
                       attribute: "question",
                       maxLines: 5,
                       decoration: InputDecoration(
                         labelText: "question",
+                        border: const OutlineInputBorder(),
                       ),
                     ),
+                    spacer,
                     FormBuilderTextField(
                       attribute: "hints",
                       maxLines: 5,
                       decoration: InputDecoration(
                         labelText: "hints",
+                        border: const OutlineInputBorder(),
                       ),
                     ),
+                    spacer,
                     FormBuilderTextField(
                       attribute: "solution",
                       maxLines: 5,
                       decoration: InputDecoration(
                         labelText: "solution",
+                        border: const OutlineInputBorder(),
                       ),
                     ),
+                    spacer,
                     FormBuilderTextField(
                       attribute: "test",
                       maxLines: 5,
                       decoration: InputDecoration(
                         labelText: "test",
+                        border: const OutlineInputBorder(),
                       ),
                     ),
                   ],

@@ -23,12 +23,44 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  # https://github.com/flutter/website/blob/master/examples/internationalization/minimal/pubspec.yaml
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.16.1
   shared_preferences: ^0.5.7+3
   flutter_form_builder: ^3.11.1
   flutter_highlight: ^0.6.0
   json_annotation: ^3.0.0
   flutter_slidable: ^0.5.4
-
+  cross_local_storage: ^1.1.1
+  mustache_template: ^1.0.0+1
+  
+  # https://pub.dev/packages/yaml_config
+  yaml_config: ^0.1.2
+  # https://juejin.im/post/5ba26c086fb9a05ce57697da
+  # https://pub.dev/packages/redux
+  redux: ^4.0.0
+  # https://pub.dev/packages/flutter_redux
+  flutter_redux: ^0.6.0
+  # https://github.com/windinwork/flutter_redux_app
+  # https://github.com/hemanthrajv/fludex
+  # https://pub.dev/packages/redux_thunk
+  redux_thunk: ^0.3.0
+  # https://pub.dev/packages/redux_logging
+  redux_logging: ^0.4.0
+  # https://pub.dev/packages/markdown_widget
+  # https://github.com/asjqkkkk/markdown_widget/blob/master/lib/tags/ul.dart
+  markdown_widget: ^1.2.1
+  # https://pub.dev/packages/flutter_translate
+  flutter_translate: ^1.6.0
+  # https://pub.dev/packages/dio
+  dio: ^3.0.9
+  # https://pub.dev/packages/animated_floatactionbuttons
+  animated_floatactionbuttons: ^0.1.0
+  # https://pub.dev/packages/share
+  share: ^0.6.3+5
+  # https://pub.dev/packages/wave
+  wave: ^0.0.8
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -40,10 +72,18 @@ dev_dependencies:
   build_runner: ^1.0.0
   # flutter pub run build_runner build
   json_serializable: ^3.3.0
+  # https://pub.dev/packages/flutter_launcher_icons
+  flutter_launcher_icons: ^0.7.4
 
 dependency_overrides:
   # https://github.com/danvick/flutter_chips_input/issues/37
   flutter_chips_input: ^1.9.0-dev.1
+  # add editable feature
+  flutter_highlight:
+    git:
+      url: git://github.com/SergeShkurko/highlight.git
+      path: flutter_highlight
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -55,6 +95,11 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
+  assets:
+    - assets/
+    - assets/i18n/
+    - assets/fonts/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
@@ -72,17 +117,13 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: FZLanTingYuan
+      fonts:
+        - asset: assets/fonts/FZLanTYJW_Xian.ttf
+    - family: romantic_garden
+      fonts:
+        - asset: assets/fonts/romantic_garden.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

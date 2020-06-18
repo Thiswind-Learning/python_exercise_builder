@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:python_exercise_builder/pages/home_page.dart';
+import 'package:flutter_translate/flutter_translate.dart';
+import 'package:python_exercise_builder/flutter_configuration.dart';
 
-void main() {
-  runApp(App());
+import 'app.dart';
+
+/// global configuration from yaml
+FlutterConfiguration config;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  config = await FlutterConfiguration.fromAsset('assets/config.yaml');
+  var delegate = await LocalizationDelegate.create(
+    fallbackLocale: 'en_US',
+    supportedLocales: ['en_US', 'zh_CN'],
+  );
+  runApp(LocalizedApp(delegate, App()));
 }
-
-class App extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: HomePage(title: 'Python Exercise Builder'),
-    );
-  }
-}
-
