@@ -139,6 +139,7 @@ class _SettingPageState extends State<SettingPage> {
                               },
                             );
                             if (locale != null) {
+                              await changeLocale(context, '${locale.languageCode}_${locale.countryCode}');
                               StoreProvider.of<AppState>(context).dispatch(RefreshLocaleAction(locale));
                             }
                           },
