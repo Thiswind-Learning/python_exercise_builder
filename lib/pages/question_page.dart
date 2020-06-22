@@ -29,7 +29,9 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   loadData() async {
-    _loading = true;
+    setState(() {
+      _loading = true;
+    });
     var prefs = await LocalStorage.getInstance();
     var questions = prefs.getStringList('questions');
     print('loadData questions: $questions');
@@ -48,19 +50,22 @@ class _QuestionPageState extends State<QuestionPage> {
     prefs.setStringList('questions', questions);
   }
 
+  refresh() async {
+    setState(() {
+      _loading = true;
+    });
+    await Future.delayed(Duration(milliseconds: 500));
+    setState(() {
+      _loading = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.save),
-            onPressed: () async {
-              await saveData();
-            },
-          )
-        ],
+        actions: [],
       ),
       body: Padding(
         padding: const EdgeInsets.all(defaultMargin),
@@ -129,6 +134,16 @@ class _QuestionPageState extends State<QuestionPage> {
             child: Icon(Icons.import_export),
             onPressed: () async => _handleImportExport(),
           ),
+          FloatingActionButton(
+            heroTag: 'save',
+            child: Icon(Icons.save),
+            onPressed: () async => saveData(),
+          ),
+          FloatingActionButton(
+            heroTag: 'refresh',
+            child: Icon(Icons.refresh),
+            onPressed: () async => refresh(),
+          ),
         ],
         colorStartAnimation: Colors.blue,
         colorEndAnimation: Colors.red,
@@ -148,12 +163,16 @@ class _QuestionPageState extends State<QuestionPage> {
   }
 
   _handleImportExport() async {
-    await Navigator.of(context).push(
+    List<Question> questions = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ImportExportPage(questions: _list),
       ),
     );
-    loadData();
+    if (questions != null) {
+      setState(() {
+        _list = questions;
+      });
+    }
   }
 
   _handleAdd() async {

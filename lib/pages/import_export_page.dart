@@ -19,8 +19,8 @@ class ImportExportPage extends StatefulWidget {
 
 class _ImportExportPageState extends State<ImportExportPage> {
   bool _loading = false;
-  String content = '';
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+  final TextEditingController __textEditingController = TextEditingController(text: '');
 
   @override
   void initState() {
@@ -28,9 +28,17 @@ class _ImportExportPageState extends State<ImportExportPage> {
     loadData();
   }
 
+  @override
+  void dispose() {
+    __textEditingController.dispose();
+    super.dispose();
+  }
+
   void loadData() async {
-    _loading = true;
-    content = JsonEncoder.withIndent("  ").convert(widget.questions);
+    setState(() {
+      _loading = true;
+    });
+    __textEditingController.text = JsonEncoder.withIndent("  ").convert(widget.questions);
     setState(() {
       _loading = false;
     });
@@ -53,7 +61,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                       children: [
                         RaisedButton.icon(
                             onPressed: () async {
-                              List<dynamic> data = json.decode(content);
+                              List<dynamic> data = json.decode(__textEditingController.text);
                               var questions = data.map((item) => Question.fromJson(item)).toList();
                               var prefs = await LocalStorage.getInstance();
                               var rawTemplate = prefs.getString('rawTemplate');
@@ -81,7 +89,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                             label: Text('copy as raw')),
                         RaisedButton.icon(
                             onPressed: () async {
-                              List<dynamic> data = json.decode(content);
+                              List<dynamic> data = json.decode(__textEditingController.text);
                               var questions = data.map((item) => Question.fromJson(item)).toList();
                               var prefs = await LocalStorage.getInstance();
                               var programTemplate = prefs.getString('programTemplate');
@@ -114,10 +122,12 @@ class _ImportExportPageState extends State<ImportExportPage> {
                       children: [
                         RaisedButton.icon(
                             onPressed: () async {
-                              List<dynamic> data = json.decode(content);
-                              var questions = data.map((item) => json.encode(item)).toList();
-                              var prefs = await LocalStorage.getInstance();
-                              prefs.setStringList('questions', questions);
+                              List<dynamic> data = json.decode(__textEditingController.text);
+                              // var questions = data.map((item) => json.encode(item)).toList();
+                              // var prefs = await LocalStorage.getInstance();
+                              // prefs.setStringList('questions', questions);
+                              var questions = data.map((item) => Question.fromJson(item)).toList();
+                              Navigator.of(context).pop(questions);
                               _scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
                                   content: Text('import successfully!'),
@@ -128,7 +138,7 @@ class _ImportExportPageState extends State<ImportExportPage> {
                             label: Text('import')),
                         RaisedButton.icon(
                             onPressed: () async {
-                              Clipboard.setData(ClipboardData(text: content));
+                              Clipboard.setData(ClipboardData(text: __textEditingController.text));
                               _scaffoldKey.currentState.showSnackBar(
                                 SnackBar(
                                   content: Text('export successfully, copied to the clipboard!'),
@@ -141,20 +151,10 @@ class _ImportExportPageState extends State<ImportExportPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(defaultMargin),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: HighlightView(
-                              content,
-                              readOnly: false,
-                              language: 'json',
-                              theme: themeMap['solarized-light'],
-                              padding: EdgeInsets.all(defaultMargin),
-                              textStyle:
-                                  TextStyle(fontFamily: 'SFMono-Regular,Consolas,Liberation Mono,Menlo,monospace'),
-                            ),
-                          ),
-                        ],
+                      child: TextField(
+                        maxLines: 10,
+                        controller: __textEditingController,
+                        decoration: InputDecoration(labelText: 'Content'),
                       ),
                     ),
                   ],
